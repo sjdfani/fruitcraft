@@ -1,1 +1,1 @@
-# fruitcraft
+# friutcraft
