@@ -10,6 +10,8 @@ services:
       - POSTGRES_USER=${DATABASE_USER}
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
       - POSTGRES_PORT=${DATABASE_PORT}
+    ports:
+      - 3636:5432
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
