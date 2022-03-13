@@ -102,7 +102,7 @@ class AccountInfo(models.Model):
 
 
 class AccountLevel(models.Model):
-    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    account = models.OneToOneField(Account, on_delete=models.CASCADE)
     stage = models.PositiveIntegerField(default=1)
     minimum = models.PositiveIntegerField(default=0)
     maximum = models.PositiveIntegerField(default=50)
