@@ -2,8 +2,9 @@ from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from django.core.mail import send_mail
 from .models import CustomUser
-from .utils import str_generator, get_tokens_for_user
+from .utils import str_generator
 from config.settings import Redis_object
+from account.models import Account, AccountLevel, AccountInfo,AccountCards
 
 
 class RegisterSerialzer(serializers.Serializer):
@@ -48,7 +49,8 @@ class VerifyRegisterSerializer(serializers.Serializer):
         email = self.validated_data['email']
         redis_data_list = Redis_object.get(email).split('/')
         password = redis_data_list[1]
-        CustomUser.objects.create(email=email, password=password)
+        user = CustomUser.objects.create(email=email, password=password)
+        # create model for account
 
 
 class LoginSerializer(serializers.Serializer):
