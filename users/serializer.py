@@ -4,7 +4,8 @@ from django.core.mail import send_mail
 from .models import CustomUser
 from .utils import str_generator
 from config.settings import Redis_object
-from account.models import Account, AccountLevel, AccountInfo,AccountCards
+from account.models import Account, AccountLevel, AccountInfo, AccountCards, Icons, Cards, StateAccountCards
+from account.utils import create_default_cards
 
 
 class RegisterSerialzer(serializers.Serializer):
@@ -45,12 +46,37 @@ class VerifyRegisterSerializer(serializers.Serializer):
         else:
             raise ValidationError('code was expired.')
 
+    def build_objects(self, email, password):
+        user = CustomUser.objects.create(email=email, password=password)
+        icon = Icons.objects.filter(id=1).first()
+        invite_code = str_generator(8)
+        account = Account.objects.create(
+            user=user, icon=icon, invite_code=invite_code)
+        AccountLevel.objects.create(account=account)
+        AccountInfo.objects.create(account=account)
+        create_default_cards()
+        card_1 = Cards.objects.filter(id=1).first()
+        AccountCards.objects.create(
+            account=account, card=card_1, power=200, price=200*6, state=StateAccountCards.BASKET
+        )
+        card_2 = Cards.objects.filter(id=2).first()
+        AccountCards.objects.create(
+            account=account, card=card_2, power=250, price=250*6, state=StateAccountCards.BASKET
+        )
+        card_3 = Cards.objects.filter(id=3).first()
+        AccountCards.objects.create(
+            account=account, card=card_3, power=180, price=180*6, state=StateAccountCards.BASKET
+        )
+        card_4 = Cards.objects.filter(id=4).first()
+        AccountCards.objects.create(
+            account=account, card=card_4, power=230, price=230*6, state=StateAccountCards.BASKET
+        )
+
     def save(self, **kwargs):
         email = self.validated_data['email']
         redis_data_list = Redis_object.get(email).split('/')
         password = redis_data_list[1]
-        user = CustomUser.objects.create(email=email, password=password)
-        # create model for account
+        self.build_objects(email, password)
 
 
 class LoginSerializer(serializers.Serializer):
