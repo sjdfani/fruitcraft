@@ -142,8 +142,8 @@ class StateAccountCards(models.TextChoices):
 
 
 class AccountCards(models.Model):
-    account = models.OneToOneField(Account, on_delete=models.CASCADE)
-    card = models.OneToOneField(Cards, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    card = models.ForeignKey(Cards, on_delete=models.CASCADE)
     stage = models.PositiveIntegerField(default=1)
     power = models.PositiveBigIntegerField(default=0)
     price = models.PositiveBigIntegerField(default=0)

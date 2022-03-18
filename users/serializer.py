@@ -48,7 +48,7 @@ class VerifyRegisterSerializer(serializers.Serializer):
 
     def build_objects(self, email, password):
         user = CustomUser.objects.create(email=email, password=password)
-        icon = Icons.objects.filter(id=1).first()
+        icon = Icons.objects.filter(name='orange').first()
         invite_code = str_generator(8)
         account = Account.objects.create(
             user=user, icon=icon, invite_code=invite_code)
